@@ -51,9 +51,11 @@ commaSep1 p = p `sepBy1` ("," *> many space) <?> "comma-separated"
 parenthesized :: Parser p -> Parser p
 parenthesized p = "(" *> many space *> p <* many space <* ")" <?> "parenthesized"
 
--- | @identifier = ( inClass "a-z_" )+@
+-- | @identifier = (inClass "a-z_") ( inClass "a-z0-9_" )*@
 identifier :: Parser Identifier
-identifier = BS.pack <$> many1 (satisfy (inClass "a-z_")) <?> "identifier"
+identifier = BS.pack
+  <$> ((:) <$> satisfy (inClass "a-z_") <*> many (satisfy (inClass "a-z0-9_")))
+  <?> "identifier"
 
 -- | @quoted-string = "'" ( any-character - "'" | "''" )* "'"@
 quotedString :: Parser BS.ByteString
