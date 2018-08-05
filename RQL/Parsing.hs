@@ -100,12 +100,12 @@ function = Function
 
 -- | > binary-operator = expression " " operator-name " " expression
 --
--- > operator-name = ( inClass "a-z=~<>+-@^%&*/!|" )*
+-- > operator-name = ( inClass "a-z=~<>+-@^%&*/!|#" )*
 binOp :: Parser Expression
 binOp = parenthesized
   (BinOp
     <$> ((expression <?> "first operand") <* spacing)
-    <*> (BS.pack <$> manyTill (satisfy (inClass "a-z=~<>+-@^%&*/!|")) spacing
+    <*> (BS.pack <$> manyTill (satisfy (inClass "a-z=~<>+-@^%&*/!|#`")) spacing
           <?> "binary operator")
     <*> (expression <?> "second operand"))
   <?> "binary operation"
